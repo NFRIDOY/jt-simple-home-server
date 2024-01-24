@@ -42,7 +42,7 @@ async function run() {
         // APIs
 
         // User Post API. Create a user 
-        app.post('/', async (req, res) => {
+        app.post('/users', async (req, res) => {
             const userReq = req.body;
 
             console.log(userReq);
@@ -50,11 +50,8 @@ async function run() {
             res.send(result);
         })
         // User get API. get all users
-        app.post('/', async (req, res) => {
-            const userReq = req.body;
-
-            console.log(userReq);
-            const result = await userCollection.insertOne(userReq);
+        app.get('/users', async (req, res) => {
+            const result = await userCollection.find().toArray();
             res.send(result);
         })
 
