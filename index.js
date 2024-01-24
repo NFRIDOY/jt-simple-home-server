@@ -41,18 +41,44 @@ async function run() {
 
         // APIs
 
-        // User Post API. Create a user 
-        app.post('/users', async (req, res) => {
-            const userReq = req.body;
+        
 
-            console.log(userReq);
-            const result = await userCollection.insertOne(userReq);
-            res.send(result);
+        // update or insert a user
+        app.put('/users', async (req, res) => {
+            try {
+                const userReq = req?.body;
+                console.log(req.body?.email);
+
+                const filter = { email: req.body?.email };
+
+                /* Set the upsert option to insert a document if no documents match
+                the filter */
+                const options = { upsert: true };
+
+                const updateUser = {
+                    $set: {
+                        email: req.body?.email,
+                        name: req.body?.name,
+                        user: req.body?.user
+                    },
+                };
+
+                const result = await userCollection.updateOne(filter, updateUser, options);
+                res.send(result);
+            } catch (error) {
+                console.log(error);
+            }
         })
+
+
         // User get API. get all users
         app.get('/users', async (req, res) => {
-            const result = await userCollection.find().toArray();
-            res.send(result);
+            try {
+                const result = await userCollection.find().toArray();
+                res.send(result);
+            } catch (error) {
+                console.log(error);
+            }
         })
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
